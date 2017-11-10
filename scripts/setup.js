@@ -36,6 +36,7 @@ function Paddle(x, y, width, height) {
   this.y = y;
   this.width = width;
   this.height = height;
+  this.speed = 4;
 };
 
 function Player(x, y, width, height) {
@@ -48,10 +49,10 @@ function Computer(x, y, width, height) {
   this.name = "Computer";
 };
 
-function Ball(x, y, radius) {
-  this.x = x;
-  this.y = y;
-  this.radius = radius;
+function Ball() {
+  this.x = canvas.width/2;
+  this.y = canvas.height/2;
+  this.radius = 3;
   this.startAngle = 0;
   this.endAngle = 2 * Math.PI;
 };
@@ -80,30 +81,37 @@ Ball.prototype.render = function() {
   context.stroke();
 };
 
-var render = function(){
-  var playerX = canvas.width - 20;
-  var playerY = canvas.height/2;
+var playerX = canvas.width - 20;
+var playerY = canvas.height/2;
 
-  var computerX = 20;
-  var computerY = canvas.height/2 + 10;
+var computerX = 20;
+var computerY = canvas.height/2 + 10;
 
-  var paddleHeight = 35;
-  var paddleWidth = 7;
+var paddleHeight = 35;
+var paddleWidth = 7;
 
-  var ballX = canvas.width/2;
-  var ballY = canvas.height/2;
-  var ballRadius = 3;
+player = new Player(playerX, playerY, paddleWidth, paddleHeight);
+computer = new Computer(computerX, computerY, paddleWidth, paddleHeight);
+ball = new Ball;
 
-  player = new Player(playerX, playerY, paddleWidth, paddleHeight);
-  computer = new Computer(computerX, computerY, paddleWidth, paddleHeight);
-  ball = new Ball(ballX, ballY, ballRadius);
+var animate = window.requestAnimationFrame ||
+              function(callback) { window.setTimeout(callback, 1000/60) };
 
+//renders the player & computer paddles, and the ball each frame
+var step = function() {
+  context.clearRect(0,0, canvas.width, canvas.height);
+  createBorder();
   player.render();
   computer.render();
   ball.render();
+  animate(step);
 };
 
+window.addEventListener('keydown', function(event) {
+  var direction =  -(39 - event.keyCode);
+  player.paddle.move(direction);
+});
+
 window.onload = function() {
-  createBorder();
-  render();
-}
+  animate(step);
+};

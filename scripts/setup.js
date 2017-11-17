@@ -42,7 +42,7 @@ function Paddle(x, y, width, height) {
   this.y = y;
   this.width = width;
   this.height = height;
-  this.speed = 5;
+  this.speed = 12;
 };
 
 function Player(x, y, width, height) {
@@ -64,7 +64,8 @@ function Ball() {
   this.startAngle = 0;
   this.endAngle = 2 * Math.PI;
   this.speedX = 4;
-  this.speedY = 2;
+  this.speedY = 2.5;
+  this.hitCount = 0;
 };
 
 Paddle.prototype.render = function() {
@@ -75,7 +76,7 @@ Paddle.prototype.render = function() {
 Computer.prototype.render = function() {
   this.paddle.render();
   context.fillText("Computer", 15, 15);
-  context.fillText(this.score, 15, 20);
+  context.fillText(this.score, 25, 25);
   context.stroke();
 };
 
@@ -83,7 +84,7 @@ Player.prototype.render = function() {
   var labelPosition = canvas.width - 40;
   this.paddle.render();
   context.fillText("Player", labelPosition, 15);
-  context.fillText(this.score, labelPosition, 20);
+  context.fillText(this.score, labelPosition, 25);
   context.stroke();
 };
 
@@ -95,7 +96,7 @@ Ball.prototype.render = function() {
 
 Paddle.prototype.move = function(direction) {
   var result = this.y + direction * this.speed;
-  if (result > 10 && result < canvas.height - 50) {
+  if (result > 10 && result < canvas.height - (this.height)) {
     this.y = result;
   };
 };
@@ -113,11 +114,21 @@ Ball.prototype.move = function() {
   } else if (this.x > canvas.width) {
     this.x = canvas.width/2;
     this.y = canvas.height/2;
+    this.speedX *= -1;
     computer.score +=1;
   } else if (this.x < 0) {
     this.x = canvas.width/2;
     this.y = canvas.height/2;
+    this.speedX *= -1;
     player.score += 1;
+  }
+};
+
+Computer.prototype.update = function() {
+  if (this.paddle.y < ball.y && this.paddle.y + this.paddle.height < canvas.height - 5) {
+    this.paddle.y += 3;
+  } else if (this.paddle.y > ball.y && this.paddle.y > 5 ) {
+    this.paddle.y -= 3;
   }
 };
 
@@ -145,6 +156,7 @@ var step = function() {
   computer.render();
   ball.render();
   ball.move();
+  computer.update();
   animate(step);
 };
 

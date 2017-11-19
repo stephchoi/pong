@@ -7,22 +7,22 @@ var createBorder = function() {
   var lineLength = 30;
 
   context.lineWidth = 4;
-//top left corner
+  //top left corner
   context.moveTo(0,0);
   context.lineTo(0,lineLength);
   context.moveTo(0,0);
   context.lineTo(lineLength,0);
-//top right
+  //top right
   context.moveTo(x, 0);
   context.lineTo(x-lineLength, 0);
   context.moveTo(x,0);
   context.lineTo(x, lineLength);
-//bottom left
+  //bottom left
   context.moveTo(0,y);
   context.lineTo(0,y-lineLength);
   context.moveTo(0,y);
   context.lineTo(lineLength,y);
-//bottom right
+  //bottom right
   context.moveTo(x, y);
   context.lineTo(x-lineLength, y);
   context.moveTo(x,y);
@@ -31,28 +31,22 @@ var createBorder = function() {
   context.stroke()
 };
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-};
-
-function Paddle(x, y, width, height) {
+function Paddle(x, y) {
   this.x = x;
   this.y = y;
-  this.width = width;
-  this.height = height;
+  this.width = 7;
+  this.height = 35;
   this.speed = 12;
 };
 
-function Player(x, y, width, height) {
-  this.paddle = new Paddle(x, y, width, height);
+function Player(x, y) {
+  this.paddle = new Paddle(x, y);
   this.name = "Player";
   this.score = 0;
 };
 
 function Computer(x, y, width, height) {
-  this.paddle = new Paddle(x, y, width, height);
+  this.paddle = new Paddle(x, y);
   this.name = "Computer";
   this.score = 0;
 };
@@ -96,7 +90,7 @@ Ball.prototype.render = function() {
 
 Paddle.prototype.move = function(direction) {
   var result = this.y + direction * this.speed;
-  if (result > 10 && result < canvas.height - (this.height)) {
+  if (result > 5 && result < canvas.height - (this.height)) {
     this.y = result;
   };
 };
@@ -110,7 +104,7 @@ Ball.prototype.move = function() {
   } else if((this.x - this.radius) <= (computer.paddle.x +computer.paddle.width) && (this.y > computer.paddle.y && this.y < computer.paddle.y + computer.paddle.height)){
     this.speedX *= -1;
   } else if (this.y + this.radius >= canvas.height - 5 || this.y - this.radius <= 5) {
-    this. speedY *= -1;
+    this.speedY *= -1;
   } else if (this.x > canvas.width) {
     this.x = canvas.width/2;
     this.y = canvas.height/2;
@@ -138,11 +132,8 @@ var playerY = canvas.height/2;
 var computerX = 20;
 var computerY = canvas.height/2 + 10;
 
-var paddleHeight = 35;
-var paddleWidth = 7;
-
-player = new Player(playerX, playerY, paddleWidth, paddleHeight);
-computer = new Computer(computerX, computerY, paddleWidth, paddleHeight);
+player = new Player(playerX, playerY);
+computer = new Computer(computerX, computerY);
 ball = new Ball;
 
 var animate = window.requestAnimationFrame ||

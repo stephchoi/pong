@@ -136,6 +136,23 @@ player = new Player(playerX, playerY);
 computer = new Computer(computerX, computerY);
 ball = new Ball;
 
+var checkGameEnd = function() {
+  if (player.score === 11) {
+    context.font = "50px serif";
+    context.strokeText("You Won!", 180, 150);
+    context.font = "12px serif";
+    context.fillText("Please refresh the page to play again.",180, 180 );
+  } else if (computer.score === 11) {
+    context.font = "50px serif";
+    context.strokeText("You Lost!", 180, 150);
+    context.font = "12px serif";
+    context.fillText("Please refresh the page to play again.",180, 180 );
+  } else {
+    ball.move();
+    computer.update();
+  }
+};
+
 var animate = window.requestAnimationFrame ||
               function(callback) { window.setTimeout(callback, 1000/60) };
 
@@ -146,8 +163,7 @@ var step = function() {
   player.render();
   computer.render();
   ball.render();
-  ball.move();
-  computer.update();
+  checkGameEnd();
   animate(step);
 };
 
